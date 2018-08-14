@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AiMapObject</string>
+    <string name="app_file_provider_authorities">"com.tinno.aimap.FileProvider"</string>
+</resources>

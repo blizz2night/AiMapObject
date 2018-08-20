@@ -94,35 +94,7 @@ public class JsonUtil {
         }
     }
 
-    public static class TokenJson {
-        String scope;
-        String access_token;
-        String expires_in;
 
-        public String getScope() {
-            return scope;
-        }
-
-        public void setScope(String scope) {
-            this.scope = scope;
-        }
-
-        public String getAccess_token() {
-            return access_token;
-        }
-
-        public void setAccess_token(String access_token) {
-            this.access_token = access_token;
-        }
-
-        public String getExpires_in() {
-            return expires_in;
-        }
-
-        public void setExpires_in(String expires_in) {
-            this.expires_in = expires_in;
-        }
-    }
 
     public static class Json {
         boolean result;
@@ -178,6 +150,36 @@ public class JsonUtil {
 
         public void setErrorCode(int errorCode) {
             this.errorCode = errorCode;
+        }
+    }
+
+    public static class TokenJson {
+        String scope;
+        String access_token;
+        String expires_in;
+
+        public String getScope() {
+            return scope;
+        }
+
+        public void setScope(String scope) {
+            this.scope = scope;
+        }
+
+        public String getAccess_token() {
+            return access_token;
+        }
+
+        public void setAccess_token(String access_token) {
+            this.access_token = access_token;
+        }
+
+        public String getExpires_in() {
+            return expires_in;
+        }
+
+        public void setExpires_in(String expires_in) {
+            this.expires_in = expires_in;
         }
     }
 

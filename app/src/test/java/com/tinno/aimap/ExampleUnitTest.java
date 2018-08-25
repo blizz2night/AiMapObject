@@ -5,6 +5,7 @@ import com.tinno.aimap.service.AIService;
 import com.tinno.aimap.service.ErrorCode;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -24,6 +25,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
+
 public class ExampleUnitTest {
 
     public static final String IMG_MAIN_DIR_PATH = "src/main/res/raw/img";
@@ -31,6 +33,10 @@ public class ExampleUnitTest {
     public static final String IMG_TEST_DIR_PATH = "src/test/res/raw/img";
     public static final String JSON_TEST_DIR_PATH = "src/test/res/raw/json";
 
+    @Before
+    public void setUp() throws Exception {
+
+    }
 
     @Test
     public void addition_isCorrect() {
@@ -63,7 +69,7 @@ public class ExampleUnitTest {
      **/
 
     @Test
-    public void testGetTokenJson() {
+    public void testGetTokenAndOutputJson() {
         try {
             String json = getTokenJson();
             FileUtils.writeStringToFile(new File(JSON_TEST_DIR_PATH+File.separator+"token.json"),json);
@@ -73,7 +79,7 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void testGetToken() {
+    public void testGetTokenAndPrint() {
         try {
             String token = getToken();
             System.out.println(token);
@@ -83,7 +89,7 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void testGetRecgResultJson() {
+    public void testGetObjectRecognitionResult() {
         String picName = "cb8065380cd7912349e12315a7345982b2b7804a.jpg";
         File imgDir = new File(IMG_TEST_DIR_PATH);
         assert imgDir.exists();
@@ -92,7 +98,7 @@ public class ExampleUnitTest {
         try {
             String base64String = getBase64String(imgFile.getPath());
             String token = getToken();
-            String resultJson = AIService.recognize(token, base64String);
+            String resultJson = AIService.objectRecognize(token, base64String);
             File file = new File(JSON_TEST_DIR_PATH +File.separator+imgFile.getName()+".json");
             FileUtils.writeStringToFile(file,resultJson);
             ResultBean jsonResult = parseResult(resultJson);
@@ -121,7 +127,7 @@ public class ExampleUnitTest {
             String base64String = getBase64String(imgFile.getPath());
             String json = FileUtils.readFileToString(tokenFile);
             String token = parseToken(json);
-            String resultJson = AIService.recognize(token, base64String);
+            String resultJson = AIService.objectRecognize(token, base64String);
             File file = new File(JSON_TEST_DIR_PATH +File.separator+imgFile.getName()+".json");
             FileUtils.writeStringToFile(file,resultJson);
             ResultBean jsonResult = parseResult(resultJson);
@@ -129,7 +135,7 @@ public class ExampleUnitTest {
             assert jsonResult.getErrorCode()== ErrorCode.ACCESS_TOKEN_EXPIRED;
 
             token = getToken();
-            resultJson = AIService.recognize(token, base64String);
+            resultJson = AIService.objectRecognize(token, base64String);
             jsonResult = parseResult(resultJson);
             System.out.println(jsonResult.getErrorMsg());
             assert jsonResult.getErrorCode()==ErrorCode.SUCCESS;
@@ -143,24 +149,73 @@ public class ExampleUnitTest {
     public void testPostImgsAndGetJsons() {
 //        byte[] bytes = FileUtils.readFileToByteArray(new File());
 //        String image = Base64.encodeToString(bytes, Base64.DEFAULT);
-        String pathname = IMG_TEST_DIR_PATH/* + File.separator + "brand"*/;
+        String pathname = IMG_TEST_DIR_PATH + File.separator + "brand";
         File imgDir = new File(pathname);
         assert imgDir.exists();
         String[] imgNames = imgDir.list();
         assert imgNames.length>0 ;
-        for (String imgName : imgNames) {
-            File imgFile = new File(pathname + File.separator + imgName);
-            try {
+        try {
+            String token = getToken();
+            for (String imgName : imgNames) {
+                File imgFile = new File(pathname + File.separator + imgName);
                 String base64String = getBase64String(imgFile.getPath());
-                String token = getToken();
-                String resultJson = AIService.recognize(token, base64String);
-                ResultBean jsonResult = parseResult(resultJson);
-                File file = new File(JSON_TEST_DIR_PATH + File.separator + imgFile.getName() + ".json");
-                FileUtils.writeStringToFile(file, resultJson);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
+                String resultJson = AIService.objectRecognize(token, base64String);
+                ResultBean jsonResult = parseResult(resultJson);
+                File file = new File(pathname + File.separator + imgFile.getName() + ".json");
+                FileUtils.writeStringToFile(file, resultJson);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testCharacterRecognition() {
+        String folder = "ocr";
+        String imgName = "IMG_20180103_022117.jpg";
+        String path = IMG_TEST_DIR_PATH + File.separator + folder + File.separator + imgName;
+        File imgFile = new File(path);
+        assert imgFile.exists();
+        try {
+            String base64String = getBase64String(imgFile.getPath());
+            String token = getToken();
+            String resultJson = AIService.characterRcognize(token, base64String);
+            File file = new File(imgFile.getParent() + File.separator + "json" + File.separator + imgName + ".json");
+            FileUtils.writeStringToFile(file,resultJson);
+            ResultBean jsonResult = parseResult(resultJson);
+            System.out.println(jsonResult);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    public void testOCR() {
+        String pathname = IMG_TEST_DIR_PATH + File.separator + "ocr";
+        File imgDir = new File(pathname);
+        assert imgDir.exists();
+        String[] imgNames = imgDir.list();
+        assert imgNames.length>0 ;
+        try {
+            String token = getToken();
+            for (String imgName : imgNames) {
+                File imgFile = new File(pathname + File.separator + imgName);
+                if (!imgFile.isFile()||(!imgName.endsWith("jpg")&&!imgName.endsWith("png"))) {
+                    continue;
+                }
+                String base64String = getBase64String(imgFile.getPath());
+
+                String resultJson = AIService.characterRcognize(token, base64String);
+                ResultBean jsonResult = parseResult(resultJson);
+                File file = new File(pathname + File.separator
+                        + "json" + File.separator + imgFile.getName() + ".json");
+                FileUtils.writeStringToFile(file, resultJson);
+                System.out.println(jsonResult);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

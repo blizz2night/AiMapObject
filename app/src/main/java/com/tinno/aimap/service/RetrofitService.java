@@ -5,7 +5,7 @@ public interface RetrofitService {
 
 //    @FormUrlEncoded
 //    @POST("rest/2.0/mms/v1/general/generalInfo")
-//    Call<JsonResultBean> recognize(@FieldMap Map<String,String> fields);
+//    Call<JsonResultBean> objectRecognize(@FieldMap Map<String,String> fields);
     //access_token
     //image
     //eco=general

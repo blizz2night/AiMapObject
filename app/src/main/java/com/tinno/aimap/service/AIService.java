@@ -2,7 +2,7 @@ package com.tinno.aimap.service;
 
 import android.annotation.SuppressLint;
 
-import com.tinno.aimap.model.ResultBean;
+import com.tinno.aimap.model.RecgResultBean;
 import com.tinno.aimap.model.TokenBean;
 
 import java.io.IOException;
@@ -19,11 +19,24 @@ import static com.tinno.aimap.utils.Util.getGson;
 
 public class AIService {
     String BASE_URL = "https://openapi.baidu.com/";
+
 /**
+ * request token:
+ * url:https://aip.baidubce.com/oauth/2.0/token
+ *
+ * Content-Type:application/x-www-form-urlencoded
+ * body:
  * 15899877054
  * 3820kang.
  * ClientId    fw0EqE0I20QNV9uSbbanlOx0s5riAIOl
  * ClientSecret    uRocuYzwa7XgUVut3rxPpoDEH35sSpLw
+ *
+ * ------------------------------------------------------
+ * grant_type:client_credentials
+ * client_id:zP0b7bjP1oXxwQGeZRrYtkxPRq11T3d0
+ * client_secret:3BGv0l41KP5og0BW4Sj6GjFZGac90kmv
+ * client_app_id:1585928312337326
+ *
 */
     public static final String TOKEN_URL = "https://aip.baidubce.com/oauth/2.0/token";
 
@@ -36,8 +49,8 @@ public class AIService {
     * */
     public static final String OCR_URL = "https://openapi.baidu.com/rest/2.0/mms/v1/ocr/ocrWords";
 
-    private static final String CLIENT_ID = "fw0EqE0I20QNV9uSbbanlOx0s5riAIOl";
-    private static final String CLIENT_SERCRET = "uRocuYzwa7XgUVut3rxPpoDEH35sSpLw";
+    private static final String CLIENT_ID = "zP0b7bjP1oXxwQGeZRrYtkxPRq11T3d0";
+    private static final String CLIENT_SECRET = "3BGv0l41KP5og0BW4Sj6GjFZGac90kmv";
     private static final String GRANT_TYPE = "client_credentials";
 
     private static final String ECO = "tangguo";
@@ -74,8 +87,8 @@ public class AIService {
         return tokenBean.getAccessToken();
     }
 
-    public static ResultBean parseResult(String jsonResult) {
-        return getGson().fromJson(jsonResult, ResultBean.class);
+    public static RecgResultBean parseRecgResult(String jsonResult) {
+        return getGson().fromJson(jsonResult, RecgResultBean.class);
     }
 
     @SuppressLint("NewApi")
@@ -115,30 +128,29 @@ public class AIService {
 
     private static Request buildTokenRequest() {
         RequestBody formBody = new FormBody.Builder()
-                .add("client_id", CLIENT_ID)
-                .add("client_secret", CLIENT_SERCRET)
-                .add("grant_type", GRANT_TYPE)
+                .add(RequestKey.CLIENT_ID, CLIENT_ID)
+                .add(RequestKey.CLIENT_SECRET, CLIENT_SECRET)
+                .add(RequestKey.GRANT_TYPE, GRANT_TYPE)
                 .build();
         return new Request.Builder().url(AIService.TOKEN_URL)
                 .post(formBody)
                 .build();
     }
 
-    //"Content-Type","application/x-www-form-urlencoded"
     private static Request buildRecgRequest(String token, String image64) {
         RequestBody requestBody = new FormBody.Builder()
-                .add("access_token", token)
-                .add("image", image64)
-                .add("ecology_uid", "1234567890")
-                .add("eco", ECO)
+                .add(RequestKey.ACCESS_TOKEN, token)
+                .add(RequestKey.IMAGE, image64)
+                .add(RequestKey.ECOLOGY_UID, "1234567890")
+                .add(RequestKey.ECO, ECO)
                 .build();
         return new Request.Builder().post(requestBody).url(AIService.RECG_URL).build();
     }
 
     private static Request buildOcrRequest(String token, String image64) {
         RequestBody requestBody = new FormBody.Builder()
-                .add("access_token", token)
-                .add("image", image64)
+                .add(RequestKey.ACCESS_TOKEN, token)
+                .add(RequestKey.IMAGE, image64)
                 .build();
         return new Request.Builder().post(requestBody).url(AIService.OCR_URL).build();
     }

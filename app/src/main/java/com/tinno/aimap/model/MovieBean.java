@@ -1,5 +1,4 @@
 package com.tinno.aimap.model;
 
-public class FaceBean {
-
+public class MovieBean {
 }

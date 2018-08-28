@@ -1,6 +1,6 @@
 package com.tinno.aimap.model;
 
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
 
 public class BookBean {
     /**
@@ -20,67 +20,22 @@ public class BookBean {
      * score : 29.760648727417
      */
 
-    private String title;
-    private String pages;
-    private String binding;
-    private String price;
-    private String intro;
-    private String publisher;
+    @SerializedName(value = "title")
+    private String name;
+
+    @SerializedName(value = "intro")
+    private String description;
+
     private String linkurl;
-    private String isbn;
-    private String publish_year;
-    private String title_url;
     private String thumburl;
     private String objurl;
-    private double score;
-    private List<String> author;
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getPages() {
-        return pages;
-    }
-
-    public void setPages(String pages) {
-        this.pages = pages;
-    }
-
-    public String getBinding() {
-        return binding;
-    }
-
-    public void setBinding(String binding) {
-        this.binding = binding;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public String getIntro() {
-        return intro;
-    }
-
-    public void setIntro(String intro) {
-        this.intro = intro;
-    }
-
-    public String getPublisher() {
-        return publisher;
-    }
-
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getLinkurl() {
@@ -89,30 +44,6 @@ public class BookBean {
 
     public void setLinkurl(String linkurl) {
         this.linkurl = linkurl;
-    }
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
-    public String getPublish_year() {
-        return publish_year;
-    }
-
-    public void setPublish_year(String publish_year) {
-        this.publish_year = publish_year;
-    }
-
-    public String getTitle_url() {
-        return title_url;
-    }
-
-    public void setTitle_url(String title_url) {
-        this.title_url = title_url;
     }
 
     public String getThumburl() {
@@ -131,19 +62,14 @@ public class BookBean {
         this.objurl = objurl;
     }
 
-    public double getScore() {
-        return score;
-    }
-
-    public void setScore(double score) {
-        this.score = score;
-    }
-
-    public List<String> getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(List<String> author) {
-        this.author = author;
+    @Override
+    public String toString() {
+        return "BookBean{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", linkurl='" + linkurl + '\'' +
+                ", thumburl='" + thumburl + '\'' +
+                ", objurl='" + objurl + '\'' +
+                '}';
     }
 }

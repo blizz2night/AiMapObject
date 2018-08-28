@@ -1,5 +1,7 @@
 package com.tinno.aimap.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class BrandBean {
 
     /**
@@ -15,24 +17,17 @@ public class BrandBean {
      * baikeurl : http://baike.baidu.com/item/%E9%9B%B7%E5%85%8B%E8%90%A8%E6%96%AF/915889
      */
 
-    private String code;
+    private String name;
     private String name_cn;
     private String name_en;
-    private String snippet;
-    private LocationBean location;
-    private int type;
-    private String name;
+    @SerializedName(value = "snippet")
+    private String description;
+    @SerializedName(value = "baikeurl")
+    private String linkurl;
     private String thumburl;
+    private LocationBean location;
     private double probability;
-    private String baikeurl;
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getName_cn() {
         return name_cn;
@@ -50,12 +45,12 @@ public class BrandBean {
         this.name_en = name_en;
     }
 
-    public String getSnippet() {
-        return snippet;
+    public String getDescription() {
+        return description;
     }
 
-    public void setSnippet(String snippet) {
-        this.snippet = snippet;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LocationBean getLocation() {
@@ -64,14 +59,6 @@ public class BrandBean {
 
     public void setLocation(LocationBean location) {
         this.location = location;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 
     public String getName() {
@@ -98,12 +85,12 @@ public class BrandBean {
         this.probability = probability;
     }
 
-    public String getBaikeurl() {
-        return baikeurl;
+    public String getLinkurl() {
+        return linkurl;
     }
 
-    public void setBaikeurl(String baikeurl) {
-        this.baikeurl = baikeurl;
+    public void setLinkurl(String linkurl) {
+        this.linkurl = linkurl;
     }
 
     public static class LocationBean {
@@ -150,5 +137,29 @@ public class BrandBean {
         public void setHeight(int height) {
             this.height = height;
         }
+
+        @Override
+        public String toString() {
+            return "LocationBean{" +
+                    "left=" + left +
+                    ", top=" + top +
+                    ", width=" + width +
+                    ", height=" + height +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "BrandBean{" +
+                "name='" + name + '\'' +
+                ", name_cn='" + name_cn + '\'' +
+                ", name_en='" + name_en + '\'' +
+                ", description='" + description + '\'' +
+                ", linkurl='" + linkurl + '\'' +
+                ", thumburl='" + thumburl + '\'' +
+                ", location=" + location +
+                ", probability=" + probability +
+                '}';
     }
 }

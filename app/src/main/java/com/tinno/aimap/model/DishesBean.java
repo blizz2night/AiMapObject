@@ -1,10 +1,10 @@
 package com.tinno.aimap.model;
 
-public class AnimalBean extends ObjectBean{
+public class DishesBean extends ObjectBean{
 
     @Override
     public String toString() {
-        return "AnimalBean{" +
+        return "DishesBean{" +
                 "words='" + words + '\'' +
                 ", baike=" + baike +
                 '}';

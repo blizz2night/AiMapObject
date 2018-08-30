@@ -18,32 +18,14 @@ public class BrandBean {
      */
 
     private String name;
-    private String name_cn;
-    private String name_en;
     @SerializedName(value = "snippet")
     private String description;
     @SerializedName(value = "baikeurl")
-    private String linkurl;
-    private String thumburl;
+    private String linkUrl;
+    @SerializedName(value = "thumburl")
+    private String thumbUrl;
     private LocationBean location;
     private double probability;
-
-
-    public String getName_cn() {
-        return name_cn;
-    }
-
-    public void setName_cn(String name_cn) {
-        this.name_cn = name_cn;
-    }
-
-    public String getName_en() {
-        return name_en;
-    }
-
-    public void setName_en(String name_en) {
-        this.name_en = name_en;
-    }
 
     public String getDescription() {
         return description;
@@ -69,12 +51,12 @@ public class BrandBean {
         this.name = name;
     }
 
-    public String getThumburl() {
-        return thumburl;
+    public String getThumbUrl() {
+        return thumbUrl;
     }
 
-    public void setThumburl(String thumburl) {
-        this.thumburl = thumburl;
+    public void setThumbUrl(String thumbUrl) {
+        this.thumbUrl = thumbUrl;
     }
 
     public double getProbability() {
@@ -85,79 +67,21 @@ public class BrandBean {
         this.probability = probability;
     }
 
-    public String getLinkurl() {
-        return linkurl;
+    public String getLinkUrl() {
+        return linkUrl;
     }
 
-    public void setLinkurl(String linkurl) {
-        this.linkurl = linkurl;
-    }
-
-    public static class LocationBean {
-        /**
-         * left : 24
-         * top : 22
-         * width : 88
-         * height : 64
-         */
-
-        private int left;
-        private int top;
-        private int width;
-        private int height;
-
-        public int getLeft() {
-            return left;
-        }
-
-        public void setLeft(int left) {
-            this.left = left;
-        }
-
-        public int getTop() {
-            return top;
-        }
-
-        public void setTop(int top) {
-            this.top = top;
-        }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public void setWidth(int width) {
-            this.width = width;
-        }
-
-        public int getHeight() {
-            return height;
-        }
-
-        public void setHeight(int height) {
-            this.height = height;
-        }
-
-        @Override
-        public String toString() {
-            return "LocationBean{" +
-                    "left=" + left +
-                    ", top=" + top +
-                    ", width=" + width +
-                    ", height=" + height +
-                    '}';
-        }
+    public void setLinkUrl(String linkUrl) {
+        this.linkUrl = linkUrl;
     }
 
     @Override
     public String toString() {
         return "BrandBean{" +
                 "name='" + name + '\'' +
-                ", name_cn='" + name_cn + '\'' +
-                ", name_en='" + name_en + '\'' +
                 ", description='" + description + '\'' +
-                ", linkurl='" + linkurl + '\'' +
-                ", thumburl='" + thumburl + '\'' +
+                ", linkUrl='" + linkUrl + '\'' +
+                ", thumbUrl='" + thumbUrl + '\'' +
                 ", location=" + location +
                 ", probability=" + probability +
                 '}';

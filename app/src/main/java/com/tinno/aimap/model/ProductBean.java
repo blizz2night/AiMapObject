@@ -16,9 +16,9 @@ public class ProductBean {
 
     @SerializedName(value = "title")
     private String name;
-    private String thumburl;
+    private String thumbUrl;
     @SerializedName(value = "url")
-    private String linkurl;
+    private String linkUrl;
 
     public String getName() {
         return name;
@@ -28,28 +28,28 @@ public class ProductBean {
         this.name = name;
     }
 
-    public String getThumburl() {
-        return thumburl;
+    public String getThumbUrl() {
+        return thumbUrl;
     }
 
-    public void setThumburl(String thumburl) {
-        this.thumburl = thumburl;
+    public void setThumbUrl(String thumbUrl) {
+        this.thumbUrl = thumbUrl;
     }
 
-    public String getLinkurl() {
-        return linkurl;
+    public String getLinkUrl() {
+        return linkUrl;
     }
 
-    public void setLinkurl(String url) {
-        this.linkurl = url;
+    public void setLinkUrl(String url) {
+        this.linkUrl = url;
     }
 
     @Override
     public String toString() {
         return "ProductBean{" +
                 "name='" + name + '\'' +
-                ", thumburl='" + thumburl + '\'' +
-                ", linkurl='" + linkurl + '\'' +
+                ", thumbUrl='" + thumbUrl + '\'' +
+                ", linkUrl='" + linkUrl + '\'' +
                 '}';
     }
 }

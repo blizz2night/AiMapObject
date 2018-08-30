@@ -3,6 +3,9 @@ package com.tinno.aimap;
 import android.support.annotation.NonNull;
 
 import com.tinno.aimap.model.BookBean;
+import com.tinno.aimap.model.BrandBean;
+import com.tinno.aimap.model.CarBean;
+import com.tinno.aimap.model.DishesBean;
 import com.tinno.aimap.model.MovieBean;
 import com.tinno.aimap.model.MusicBean;
 import com.tinno.aimap.model.PlantBean;
@@ -25,7 +28,7 @@ import static com.tinno.aimap.service.AIService.getToken;
 import static com.tinno.aimap.service.AIService.getTokenJson;
 import static com.tinno.aimap.service.AIService.parseRecgResult;
 import static com.tinno.aimap.service.AIService.parseToken;
-import static com.tinno.aimap.utils.Util.getBase64String;
+import static com.tinno.aimap.utils.GsonUtil.getBase64String;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -98,8 +101,8 @@ public class ExampleUnitTest {
 
     @Test
     public void testGetObjectRecognitionResult() {
-        String name = "viva.jpg";
-        String folder = Catalog.MUSIC;
+        String name = "dogss.jpeg";
+        String folder = Catalog.ANIMAL;
         String input = getInputPath(folder, name);
         String output = getOutputPath(folder, name);
         File imgFile = new File(input);
@@ -108,10 +111,12 @@ public class ExampleUnitTest {
             String base64String = getBase64String(imgFile.getPath());
             String token = getToken();
             String resultJson = AIService.objectRecognize(token, base64String);
+            System.out.println(resultJson);
             File file = new File(output);
             FileUtils.writeStringToFile(file,resultJson);
             RecgResultBean jsonResult = parseRecgResult(resultJson);
             RecgResultBean.Result result = jsonResult.getResult();
+            System.out.println(result);
 //            result.keySet().forEach(System.out::println);
 //            assert result.keySet().size() >= 2;
         } catch (IOException e) {
@@ -364,16 +369,29 @@ public class ExampleUnitTest {
 //            Map<String, Object> result = recgResultBean.getResult();
 //            Map<String,Object> face = (Map<String, Object>) result.get(Catalog.FACE);
 //            String baike = (String) face.get("baike");
-//            FaceBean faceBean = getGson().fromJson(baike, FaceBean.class);
+//            FaceBean faceBean = getInstance().fromJson(baike, FaceBean.class);
 //            System.out.println(faceBean.getBaike());
 //
-//            Map<String,Object> o = getGson().fromJson(faceBean.getBaike(), type.getType());
+//            Map<String,Object> o = getInstance().fromJson(faceBean.getBaike(), type.getType());
 //            String abst = (String) o.get("abstract");
 //            System.out.println(abst);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    @Test
+    public void testGetCarBean() {
+        String inputPath = "src/test/res/raw/img/car/json/car.jpg.json";
+        try {
+            String s = FileUtils.readFileToString(new File(inputPath));
+            RecgResultBean recgResultBean = parseRecgResult(s);
+            List<CarBean> value = recgResultBean.getResult().getCar();
+            System.out.println(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Test
     public void testGetAnimalBean() {
@@ -391,20 +409,6 @@ public class ExampleUnitTest {
         }
 
     }
-
-    @Test
-    public void testGetCarBean() {
-        String inputPath = "src/test/res/raw/img/car/json/car.jpg.json";
-        try {
-            String s = FileUtils.readFileToString(new File(inputPath));
-            RecgResultBean recgResultBean = parseRecgResult(s);
-            String value = recgResultBean.getResult().getCar().getBaike().get(0).getValue();
-            System.out.println(value);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Test
     public void testGetPlantBean() {
         String inputPath = "src/test/res/raw/img/plant/json/plant.jpeg.json";
@@ -412,8 +416,22 @@ public class ExampleUnitTest {
             String s = FileUtils.readFileToString(new File(inputPath));
             RecgResultBean recgResultBean = parseRecgResult(s);
             System.out.println(recgResultBean);
-            PlantBean plant = recgResultBean.getResult().getPlant();
-            System.out.println(plant);
+            List<PlantBean> plants = recgResultBean.getResult().getPlant();
+            System.out.println(plants);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testGetDishBean() {
+        String inputPath = "src/test/res/raw/img/dish/json/dish.jpeg.json";
+        try {
+            String s = FileUtils.readFileToString(new File(inputPath));
+            RecgResultBean recgResultBean = parseRecgResult(s);
+            System.out.println(recgResultBean);
+            List<DishesBean> dishes = recgResultBean.getResult().getDishes();
+            System.out.println(dishes);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -426,7 +444,7 @@ public class ExampleUnitTest {
             String s = FileUtils.readFileToString(new File(inputPath));
             RecgResultBean recgResultBean = parseRecgResult(s);
             System.out.println(recgResultBean);
-            Object brand = recgResultBean.getResult().getBrandLogo();
+            List<BrandBean> brand = recgResultBean.getResult().getBrandLogo();
             System.out.println(brand);
         } catch (IOException e) {
             e.printStackTrace();
@@ -455,8 +473,10 @@ public class ExampleUnitTest {
         try {
             String s = FileUtils.readFileToString(new File(inputPath));
             RecgResultBean recgResultBean = parseRecgResult(s);
+            System.out.println(recgResultBean);
+            System.out.println();
             List<MovieBean> movie = recgResultBean.getResult().getMovie();
-            System.out.println(movie.get(0));
+            System.out.println(movie);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -480,7 +500,7 @@ public class ExampleUnitTest {
             String s = FileUtils.readFileToString(new File(inputPath));
             RecgResultBean recgResultBean = parseRecgResult(s);
             List<ProductBean> product = recgResultBean.getResult().getProduct();
-            System.out.println(product.get(0));
+            System.out.println(product);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -492,7 +512,7 @@ public class ExampleUnitTest {
             String s = FileUtils.readFileToString(new File(inputPath));
             RecgResultBean recgResultBean = parseRecgResult(s);
             List<ScanBean> scan = recgResultBean.getResult().getScan();
-            System.out.println(scan.get(0));
+            System.out.println(scan);
         } catch (IOException e) {
             e.printStackTrace();
         }

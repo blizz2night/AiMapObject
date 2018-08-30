@@ -1,5 +1,7 @@
 package com.tinno.aimap.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class MusicBean {
 
 
@@ -16,9 +18,10 @@ public class MusicBean {
      */
 
     private String name;
-    private String linkurl;
-    private String thumburl;
-    private String objurl;
+    @SerializedName(value = "linkurl")
+    private String linkUrl;
+    @SerializedName(value = "thumburl")
+    private String thumbUrl;
     private String description;
 
     public String getName() {
@@ -29,28 +32,20 @@ public class MusicBean {
         this.name = name;
     }
 
-    public String getLinkurl() {
-        return linkurl;
+    public String getLinkUrl() {
+        return linkUrl;
     }
 
-    public void setLinkurl(String linkurl) {
-        this.linkurl = linkurl;
+    public void setLinkUrl(String linkUrl) {
+        this.linkUrl = linkUrl;
     }
 
-    public String getThumburl() {
-        return thumburl;
+    public String getThumbUrl() {
+        return thumbUrl;
     }
 
-    public void setThumburl(String thumburl) {
-        this.thumburl = thumburl;
-    }
-
-    public String getObjurl() {
-        return objurl;
-    }
-
-    public void setObjurl(String objurl) {
-        this.objurl = objurl;
+    public void setThumbUrl(String thumbUrl) {
+        this.thumbUrl = thumbUrl;
     }
 
     public String getDescription() {
@@ -65,9 +60,8 @@ public class MusicBean {
     public String toString() {
         return "MusicBean{" +
                 "name='" + name + '\'' +
-                ", linkurl='" + linkurl + '\'' +
-                ", thumburl='" + thumburl + '\'' +
-                ", objurl='" + objurl + '\'' +
+                ", linkUrl='" + linkUrl + '\'' +
+                ", thumbUrl='" + thumbUrl + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }

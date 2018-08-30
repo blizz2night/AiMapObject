@@ -1,5 +1,7 @@
 package com.tinno.aimap.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class MovieBean {
 
     /**
@@ -23,9 +25,10 @@ public class MovieBean {
 
     private String name;
     private String description;
-    private String linkurl;
-    private String thumburl;
-    private String objurl;
+    @SerializedName(value = "linkurl")
+    private String linkUrl;
+    @SerializedName(value = "thumburl")
+    private String thumbUrl;
 
     public String getName() {
         return name;
@@ -43,28 +46,20 @@ public class MovieBean {
         this.description = description;
     }
 
-    public String getLinkurl() {
-        return linkurl;
+    public String getLinkUrl() {
+        return linkUrl;
     }
 
-    public void setLinkurl(String linkurl) {
-        this.linkurl = linkurl;
+    public void setLinkUrl(String linkUrl) {
+        this.linkUrl = linkUrl;
     }
 
-    public String getThumburl() {
-        return thumburl;
+    public String getThumbUrl() {
+        return thumbUrl;
     }
 
-    public void setThumburl(String thumburl) {
-        this.thumburl = thumburl;
-    }
-
-    public String getObjurl() {
-        return objurl;
-    }
-
-    public void setObjurl(String objurl) {
-        this.objurl = objurl;
+    public void setThumbUrl(String thumbUrl) {
+        this.thumbUrl = thumbUrl;
     }
 
     @Override
@@ -72,9 +67,8 @@ public class MovieBean {
         return "MovieBean{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", linkurl='" + linkurl + '\'' +
-                ", thumburl='" + thumburl + '\'' +
-                ", objurl='" + objurl + '\'' +
+                ", linkUrl='" + linkUrl + '\'' +
+                ", thumbUrl='" + thumbUrl + '\'' +
                 '}';
     }
 }

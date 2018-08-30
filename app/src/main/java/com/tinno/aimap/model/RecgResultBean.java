@@ -1,14 +1,7 @@
 package com.tinno.aimap.model;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 public class RecgResultBean {
@@ -65,16 +58,17 @@ public class RecgResultBean {
         private String imgSearchPageUrl;
         private List<ScanBean> scan;
         private List<BookBean> book;
+        @SerializedName(value = "movie", alternate = "moive")
         private List<MovieBean> movie;
         private List<MusicBean> music;
         private List<ProductBean> product;
 
-        private BrandBean brandLogo;
+        private List<BrandBean> brandLogo;
         private FaceBean face;
-        private CarBean car;
-        private DishesBean dishes;
-        private PlantBean plant;
-        private AnimalBean animal;
+        private List<CarBean> car;
+        private List<DishesBean> dishes;
+        private List<PlantBean> plant;
+        private List<AnimalBean> animal;
 
         public String getImgSearchPageUrl() {
             return imgSearchPageUrl;
@@ -124,11 +118,11 @@ public class RecgResultBean {
             this.product = product;
         }
 
-        public BrandBean getBrandLogo() {
+        public List<BrandBean> getBrandLogo() {
             return brandLogo;
         }
 
-        public void setBrandLogo(BrandBean brandLogo) {
+        public void setBrandLogo(List<BrandBean> brandLogo) {
             this.brandLogo = brandLogo;
         }
 
@@ -140,35 +134,35 @@ public class RecgResultBean {
             this.face = face;
         }
 
-        public CarBean getCar() {
+        public List<CarBean> getCar() {
             return car;
         }
 
-        public void setCar(CarBean car) {
+        public void setCar(List<CarBean> car) {
             this.car = car;
         }
 
-        public DishesBean getDishes() {
+        public List<DishesBean> getDishes() {
             return dishes;
         }
 
-        public void setDishes(DishesBean dishes) {
+        public void setDishes(List<DishesBean> dishes) {
             this.dishes = dishes;
         }
 
-        public PlantBean getPlant() {
+        public List<PlantBean> getPlant() {
             return plant;
         }
 
-        public void setPlant(PlantBean plant) {
+        public void setPlant(List<PlantBean> plant) {
             this.plant = plant;
         }
 
-        public AnimalBean getAnimal() {
+        public List<AnimalBean> getAnimal() {
             return animal;
         }
 
-        public void setAnimal(AnimalBean animal) {
+        public void setAnimal(List<AnimalBean> animal) {
             this.animal = animal;
         }
 
@@ -200,20 +194,5 @@ public class RecgResultBean {
                 ", support='" + support + '\'' +
                 ", logid='" + logid + '\'' +
                 '}';
-    }
-
-    public static class MyDeserializer implements JsonDeserializer<RecgResultBean> {
-
-        @Override
-        public RecgResultBean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            JsonObject jsonObject = json.getAsJsonObject();
-            JsonArray scans = jsonObject.getAsJsonArray("scan");
-            if (scans != null) {
-                for (JsonElement jsonElement : scans) {
-                    ScanBean scanBean = com.tinno.aimap.utils.Util.getGson().fromJson(jsonElement, ScanBean.class);
-                }
-            }
-            return null;
-        }
     }
 }

@@ -2,10 +2,6 @@ package com.tinno.aimap.service;
 
 import android.support.annotation.StringDef;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@Retention(RetentionPolicy.SOURCE)
 @StringDef({RequestKey.ACCESS_TOKEN, RequestKey.CLIENT_ID,
         RequestKey.CLIENT_SECRET, RequestKey.GRANT_TYPE,
         RequestKey.IMAGE, RequestKey.ECOLOGY_UID, RequestKey.ECO})

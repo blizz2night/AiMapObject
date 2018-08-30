@@ -15,7 +15,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-import static com.tinno.aimap.utils.Util.getGson;
+import static com.tinno.aimap.utils.GsonUtil.getInstance;
 
 public class AIService {
     String BASE_URL = "https://openapi.baidu.com/";
@@ -49,6 +49,8 @@ public class AIService {
     * */
     public static final String OCR_URL = "https://openapi.baidu.com/rest/2.0/mms/v1/ocr/ocrWords";
 
+//    private static final String CLIENT_ID = "fw0EqE0I20QNV9uSbbanlOx0s5riAIOl";
+//    private static final String CLIENT_SECRET = "uRocuYzwa7XgUVut3rxPpoDEH35sSpLw";
     private static final String CLIENT_ID = "zP0b7bjP1oXxwQGeZRrYtkxPRq11T3d0";
     private static final String CLIENT_SECRET = "3BGv0l41KP5og0BW4Sj6GjFZGac90kmv";
     private static final String GRANT_TYPE = "client_credentials";
@@ -83,12 +85,12 @@ public class AIService {
     }
 
     public static String parseToken(String json) throws IOException {
-        TokenBean tokenBean = getGson().fromJson(json, TokenBean.class);
+        TokenBean tokenBean = getInstance().fromJson(json, TokenBean.class);
         return tokenBean.getAccessToken();
     }
 
     public static RecgResultBean parseRecgResult(String jsonResult) {
-        return getGson().fromJson(jsonResult, RecgResultBean.class);
+        return getInstance().fromJson(jsonResult, RecgResultBean.class);
     }
 
     @SuppressLint("NewApi")

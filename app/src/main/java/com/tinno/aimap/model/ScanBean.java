@@ -45,9 +45,10 @@ public class ScanBean {
     private String name;
     @SerializedName(value = "desc")
     private String description;
-    private String linkurl;
-    private String thumburl;
-    private String objurl;
+    @SerializedName(value = "linkurl")
+    private String linkUrl;
+    @SerializedName(value = "thumburl")
+    private String thumbUrl;
 
     public String getName() {
         return name;
@@ -65,28 +66,20 @@ public class ScanBean {
         this.description = desc;
     }
 
-    public String getLinkurl() {
-        return linkurl;
+    public String getLinkUrl() {
+        return linkUrl;
     }
 
-    public void setLinkurl(String linkurl) {
-        this.linkurl = linkurl;
+    public void setLinkUrl(String linkUrl) {
+        this.linkUrl = linkUrl;
     }
 
-    public String getThumburl() {
-        return thumburl;
+    public String getThumbUrl() {
+        return thumbUrl;
     }
 
-    public void setThumburl(String thumburl) {
-        this.thumburl = thumburl;
-    }
-
-    public String getObjurl() {
-        return objurl;
-    }
-
-    public void setObjurl(String objurl) {
-        this.objurl = objurl;
+    public void setThumbUrl(String thumbUrl) {
+        this.thumbUrl = thumbUrl;
     }
 
     @Override
@@ -94,9 +87,8 @@ public class ScanBean {
         return "ScanBean{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", linkurl='" + linkurl + '\'' +
-                ", thumburl='" + thumburl + '\'' +
-                ", objurl='" + objurl + '\'' +
+                ", linkUrl='" + linkUrl + '\'' +
+                ", thumbUrl='" + thumbUrl + '\'' +
                 '}';
     }
 }

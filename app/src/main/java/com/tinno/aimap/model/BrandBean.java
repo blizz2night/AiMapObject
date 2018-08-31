@@ -25,7 +25,8 @@ public class BrandBean {
     @SerializedName(value = "thumburl")
     private String thumbUrl;
     private LocationBean location;
-    private double probability;
+    @SerializedName(value = "probability")
+    private double score;
 
     public String getDescription() {
         return description;
@@ -59,12 +60,12 @@ public class BrandBean {
         this.thumbUrl = thumbUrl;
     }
 
-    public double getProbability() {
-        return probability;
+    public double getScore() {
+        return score;
     }
 
-    public void setProbability(double probability) {
-        this.probability = probability;
+    public void setScore(double score) {
+        this.score = score;
     }
 
     public String getLinkUrl() {
@@ -83,7 +84,7 @@ public class BrandBean {
                 ", linkUrl='" + linkUrl + '\'' +
                 ", thumbUrl='" + thumbUrl + '\'' +
                 ", location=" + location +
-                ", probability=" + probability +
+                ", score=" + score +
                 '}';
     }
 }

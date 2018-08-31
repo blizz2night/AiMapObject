@@ -9,10 +9,9 @@ import com.tinno.aimap.model.DishesBean;
 import com.tinno.aimap.model.MovieBean;
 import com.tinno.aimap.model.MusicBean;
 import com.tinno.aimap.model.PlantBean;
-import com.tinno.aimap.model.ProductBean;
-import com.tinno.aimap.model.RecgResultBean;
+import com.tinno.aimap.model.RecgResponseBean;
 import com.tinno.aimap.model.ScanBean;
-import com.tinno.aimap.service.AIService;
+import com.tinno.aimap.service.BaiduService;
 import com.tinno.aimap.service.ErrorCode;
 
 import org.apache.commons.io.FileUtils;
@@ -24,10 +23,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.tinno.aimap.service.AIService.getToken;
-import static com.tinno.aimap.service.AIService.getTokenJson;
-import static com.tinno.aimap.service.AIService.parseRecgResult;
-import static com.tinno.aimap.service.AIService.parseToken;
+import static com.tinno.aimap.service.BaiduService.getToken;
+import static com.tinno.aimap.service.BaiduService.getTokenJson;
+import static com.tinno.aimap.service.BaiduService.parseRecgResult;
+import static com.tinno.aimap.service.BaiduService.parseToken;
 import static com.tinno.aimap.utils.GsonUtil.getBase64String;
 import static org.junit.Assert.assertEquals;
 
@@ -101,8 +100,8 @@ public class ExampleUnitTest {
 
     @Test
     public void testGetObjectRecognitionResult() {
-        String name = "dogss.jpeg";
-        String folder = Catalog.ANIMAL;
+        String name = "book2.jpeg";
+        String folder = Catalog.BOOK/*+File.separator+Catalog.POSITIVE*/;
         String input = getInputPath(folder, name);
         String output = getOutputPath(folder, name);
         File imgFile = new File(input);
@@ -110,12 +109,12 @@ public class ExampleUnitTest {
         try {
             String base64String = getBase64String(imgFile.getPath());
             String token = getToken();
-            String resultJson = AIService.objectRecognize(token, base64String);
+            String resultJson = BaiduService.objectRecognize(token, base64String);
             System.out.println(resultJson);
             File file = new File(output);
             FileUtils.writeStringToFile(file,resultJson);
-            RecgResultBean jsonResult = parseRecgResult(resultJson);
-            RecgResultBean.Result result = jsonResult.getResult();
+            RecgResponseBean jsonResult = parseRecgResult(resultJson);
+            RecgResponseBean.Result result = jsonResult.getResult();
             System.out.println(result);
 //            result.keySet().forEach(System.out::println);
 //            assert result.keySet().size() >= 2;
@@ -150,15 +149,15 @@ public class ExampleUnitTest {
             String base64String = getBase64String(imgFile.getPath());
             String json = FileUtils.readFileToString(tokenFile);
             String token = parseToken(json);
-            String resultJson = AIService.objectRecognize(token, base64String);
+            String resultJson = BaiduService.objectRecognize(token, base64String);
             File file = new File(TEST_JSON_DIR +File.separator+imgFile.getName()+".json");
             FileUtils.writeStringToFile(file,resultJson);
-            RecgResultBean jsonResult = parseRecgResult(resultJson);
+            RecgResponseBean jsonResult = parseRecgResult(resultJson);
             System.out.println(jsonResult.getErrorMsg());
             assert jsonResult.getErrorCode()== ErrorCode.ACCESS_TOKEN_EXPIRED;
 
             token = getToken();
-            resultJson = AIService.objectRecognize(token, base64String);
+            resultJson = BaiduService.objectRecognize(token, base64String);
             jsonResult = parseRecgResult(resultJson);
             System.out.println(jsonResult.getErrorMsg());
             assert jsonResult.getErrorCode()==ErrorCode.SUCCESS;
@@ -170,19 +169,18 @@ public class ExampleUnitTest {
 
     @Test
     public void testCharacterRecognition() {
-        String folder = "ocr";
-        String imgName = "IMG_20180103_022117.jpg";
-        String path = getInputPath(imgName, folder);
+        String folder = Catalog.OCR;
+        String imgName = "02.png";
+        String path = getInputPath(folder, imgName);
         File imgFile = new File(path);
         assert imgFile.exists();
         try {
             String base64String = getBase64String(imgFile.getPath());
             String token = getToken();
-            String resultJson = AIService.characterRcognize(token, base64String);
+            String resultJson = BaiduService.characterRecognize(token, base64String);
             File file = new File(imgFile.getParent() + File.separator + "json" + File.separator + imgName + ".json");
             FileUtils.writeStringToFile(file,resultJson);
-            RecgResultBean jsonResult = parseRecgResult(resultJson);
-            System.out.println(jsonResult);
+            System.out.println(resultJson);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -229,10 +227,10 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void testDish() {
+    public void testDishes() {
         try {
             String token = getToken();
-            testRecgInFolder(Catalog.DISH, token);
+            testRecgInFolder(Catalog.DISHES, token);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -319,8 +317,8 @@ public class ExampleUnitTest {
                 }
                 File imgFile = new File(inputPath + File.separator + imgName);
                 String base64String = getBase64String(imgFile.getPath());
-                String resultJson = AIService.characterRcognize(token, base64String);
-                RecgResultBean jsonResult = parseRecgResult(resultJson);
+                String resultJson = BaiduService.characterRecognize(token, base64String);
+                RecgResponseBean jsonResult = parseRecgResult(resultJson);
                 System.out.println(jsonResult);
                 File file = new File(outputPath + File.separator + imgFile.getName() + ".json");
                 FileUtils.writeStringToFile(file, resultJson);
@@ -339,19 +337,20 @@ public class ExampleUnitTest {
         assert imgNames.length>0 ;
         try {
             for (String imgName : imgNames) {
-                if (!(imgName.endsWith("jpeg") || imgName.endsWith("jpg") || imgName.endsWith("png"))) {
-                    continue;
+                File f = new File(inputPath, imgName);
+                if (f.isDirectory()) {
+                    testRecgInFolder(folder + File.separator + imgName, token);
+                } else if ((imgName.endsWith("jpeg") || imgName.endsWith("jpg") || imgName.endsWith("png"))) {
+                    File imgFile = new File(inputPath + File.separator + imgName);
+                    String base64String = getBase64String(imgFile.getPath());
+                    String resultJson = BaiduService.objectRecognize(token, base64String);
+                    RecgResponseBean jsonResult = parseRecgResult(resultJson);
+                    System.out.println(jsonResult);
+                    System.out.println();
+                    assert jsonResult.getErrorCode() == ErrorCode.SUCCESS;
+                    File file = new File(outputPath + File.separator + imgFile.getName() + ".json");
+                    FileUtils.writeStringToFile(file, resultJson);
                 }
-                File imgFile = new File(inputPath + File.separator + imgName);
-                String base64String = getBase64String(imgFile.getPath());
-
-                String resultJson = AIService.objectRecognize(token, base64String);
-                RecgResultBean jsonResult = parseRecgResult(resultJson);
-                System.out.println(jsonResult);
-                System.out.println();
-                assert jsonResult.getErrorCode() == ErrorCode.SUCCESS;
-                File file = new File(outputPath + File.separator + imgFile.getName() + ".json");
-                FileUtils.writeStringToFile(file, resultJson);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -363,8 +362,9 @@ public class ExampleUnitTest {
         String inputPath = "src/test/res/raw/img/face/json/face.jpg.json";
         try {
             String s = FileUtils.readFileToString(new File(inputPath));
-            RecgResultBean recgResultBean = parseRecgResult(s);
-            Object face = recgResultBean.getResult().getFace();
+            RecgResponseBean recgResponseBean = parseRecgResult(s);
+            System.out.println(recgResponseBean);
+            Object face = recgResponseBean.getResult().getFace();
             System.out.println(face);
 //            Map<String, Object> result = recgResultBean.getResult();
 //            Map<String,Object> face = (Map<String, Object>) result.get(Catalog.FACE);
@@ -384,8 +384,8 @@ public class ExampleUnitTest {
         String inputPath = "src/test/res/raw/img/car/json/car.jpg.json";
         try {
             String s = FileUtils.readFileToString(new File(inputPath));
-            RecgResultBean recgResultBean = parseRecgResult(s);
-            List<CarBean> value = recgResultBean.getResult().getCar();
+            RecgResponseBean recgResponseBean = parseRecgResult(s);
+            List<CarBean> value = recgResponseBean.getResult().getCar();
             System.out.println(value);
         } catch (IOException e) {
             e.printStackTrace();
@@ -398,8 +398,8 @@ public class ExampleUnitTest {
         String inputPath = "src/test/res/raw/img/animal/json/animal.jpg.json";
         try {
             String s = FileUtils.readFileToString(new File(inputPath));
-            RecgResultBean recgResultBean = parseRecgResult(s);
-            RecgResultBean.Result result = recgResultBean.getResult();
+            RecgResponseBean recgResponseBean = parseRecgResult(s);
+            RecgResponseBean.Result result = recgResponseBean.getResult();
             Object o = result.getAnimal();
 
             System.out.println(o);
@@ -414,9 +414,9 @@ public class ExampleUnitTest {
         String inputPath = "src/test/res/raw/img/plant/json/plant.jpeg.json";
         try {
             String s = FileUtils.readFileToString(new File(inputPath));
-            RecgResultBean recgResultBean = parseRecgResult(s);
-            System.out.println(recgResultBean);
-            List<PlantBean> plants = recgResultBean.getResult().getPlant();
+            RecgResponseBean recgResponseBean = parseRecgResult(s);
+            System.out.println(recgResponseBean);
+            List<PlantBean> plants = recgResponseBean.getResult().getPlant();
             System.out.println(plants);
         } catch (IOException e) {
             e.printStackTrace();
@@ -425,12 +425,12 @@ public class ExampleUnitTest {
 
     @Test
     public void testGetDishBean() {
-        String inputPath = "src/test/res/raw/img/dish/json/dish.jpeg.json";
+        String inputPath = "src/test/res/raw/img/dishes/json/dishes02.jpeg.json";
         try {
             String s = FileUtils.readFileToString(new File(inputPath));
-            RecgResultBean recgResultBean = parseRecgResult(s);
-            System.out.println(recgResultBean);
-            List<DishesBean> dishes = recgResultBean.getResult().getDishes();
+            RecgResponseBean recgResponseBean = parseRecgResult(s);
+            System.out.println(recgResponseBean);
+            List<DishesBean> dishes = recgResponseBean.getResult().getDishes();
             System.out.println(dishes);
         } catch (IOException e) {
             e.printStackTrace();
@@ -442,9 +442,9 @@ public class ExampleUnitTest {
         String inputPath = "src/test/res/raw/img/brand/json/3.jpeg.json";
         try {
             String s = FileUtils.readFileToString(new File(inputPath));
-            RecgResultBean recgResultBean = parseRecgResult(s);
-            System.out.println(recgResultBean);
-            List<BrandBean> brand = recgResultBean.getResult().getBrandLogo();
+            RecgResponseBean recgResponseBean = parseRecgResult(s);
+            System.out.println(recgResponseBean);
+            BrandBean brand = recgResponseBean.getResult().getBrandLogo();
             System.out.println(brand);
         } catch (IOException e) {
             e.printStackTrace();
@@ -456,8 +456,8 @@ public class ExampleUnitTest {
         String inputPath = "src/test/res/raw/img/book/json/book.jpeg.json";
         try {
             String s = FileUtils.readFileToString(new File(inputPath));
-            RecgResultBean recgResultBean = parseRecgResult(s);
-            List<BookBean> book = recgResultBean.getResult().getBook();
+            RecgResponseBean recgResponseBean = parseRecgResult(s);
+            List<BookBean> book = recgResponseBean.getResult().getBook();
             System.out.println(book.get(0));
         } catch (IOException e) {
             e.printStackTrace();
@@ -472,10 +472,10 @@ public class ExampleUnitTest {
         String inputPath = "src/test/res/raw/img/movie/json/movie.jpg.json";
         try {
             String s = FileUtils.readFileToString(new File(inputPath));
-            RecgResultBean recgResultBean = parseRecgResult(s);
-            System.out.println(recgResultBean);
+            RecgResponseBean recgResponseBean = parseRecgResult(s);
+            System.out.println(recgResponseBean);
             System.out.println();
-            List<MovieBean> movie = recgResultBean.getResult().getMovie();
+            List<MovieBean> movie = recgResponseBean.getResult().getMovie();
             System.out.println(movie);
         } catch (IOException e) {
             e.printStackTrace();
@@ -486,32 +486,32 @@ public class ExampleUnitTest {
         String inputPath = "src/test/res/raw/img/music/json/music.jpg.json";
         try {
             String s = FileUtils.readFileToString(new File(inputPath));
-            RecgResultBean recgResultBean = parseRecgResult(s);
-            List<MusicBean> music = recgResultBean.getResult().getMusic();
+            RecgResponseBean recgResponseBean = parseRecgResult(s);
+            List<MusicBean> music = recgResponseBean.getResult().getMusic();
             System.out.println(music.get(0));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    @Test
-    public void testGetProductBean() {
-        String inputPath = "src/test/res/raw/img/product/json/coffee.jpg.json";
-        try {
-            String s = FileUtils.readFileToString(new File(inputPath));
-            RecgResultBean recgResultBean = parseRecgResult(s);
-            List<ProductBean> product = recgResultBean.getResult().getProduct();
-            System.out.println(product);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    @Test
+//    public void testGetProductBean() {
+//        String inputPath = "src/test/res/raw/img/product/json/coffee.jpg.json";
+//        try {
+//            String s = FileUtils.readFileToString(new File(inputPath));
+//            RecgResultBean recgResultBean = parseRecgResult(s);
+//            List<ProductBean> product = recgResultBean.getResult().getProduct();
+//            System.out.println(product);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
     @Test
     public void testGetScanBean() {
         String inputPath = "src/test/res/raw/img/scan/json/tiantan.jpg.json";
         try {
             String s = FileUtils.readFileToString(new File(inputPath));
-            RecgResultBean recgResultBean = parseRecgResult(s);
-            List<ScanBean> scan = recgResultBean.getResult().getScan();
+            RecgResponseBean recgResponseBean = parseRecgResult(s);
+            List<ScanBean> scan = recgResponseBean.getResult().getScan();
             System.out.println(scan);
         } catch (IOException e) {
             e.printStackTrace();

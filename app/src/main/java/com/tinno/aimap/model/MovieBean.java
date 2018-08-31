@@ -29,6 +29,7 @@ public class MovieBean {
     private String linkUrl;
     @SerializedName(value = "thumburl")
     private String thumbUrl;
+    private double score;
 
     public String getName() {
         return name;
@@ -62,6 +63,14 @@ public class MovieBean {
         this.thumbUrl = thumbUrl;
     }
 
+    public double getScore() {
+        return score;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
+    }
+
     @Override
     public String toString() {
         return "MovieBean{" +
@@ -69,6 +78,7 @@ public class MovieBean {
                 ", description='" + description + '\'' +
                 ", linkUrl='" + linkUrl + '\'' +
                 ", thumbUrl='" + thumbUrl + '\'' +
+                ", score=" + score +
                 '}';
     }
 }

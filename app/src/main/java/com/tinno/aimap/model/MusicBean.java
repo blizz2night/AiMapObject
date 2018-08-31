@@ -23,6 +23,7 @@ public class MusicBean {
     @SerializedName(value = "thumburl")
     private String thumbUrl;
     private String description;
+    private double score;
 
     public String getName() {
         return name;
@@ -56,6 +57,14 @@ public class MusicBean {
         this.description = description;
     }
 
+    public double getScore() {
+        return score;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
+    }
+
     @Override
     public String toString() {
         return "MusicBean{" +
@@ -63,6 +72,7 @@ public class MusicBean {
                 ", linkUrl='" + linkUrl + '\'' +
                 ", thumbUrl='" + thumbUrl + '\'' +
                 ", description='" + description + '\'' +
+                ", score=" + score +
                 '}';
     }
 }

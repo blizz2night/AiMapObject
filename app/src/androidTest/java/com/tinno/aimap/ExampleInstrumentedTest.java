@@ -8,7 +8,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tinno.aimap.model.FaceBean;
-import com.tinno.aimap.model.RecgResultBean;
+import com.tinno.aimap.model.RecgResponseBean;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -153,7 +153,7 @@ public class ExampleInstrumentedTest {
 //            JSONObject baike = jsonObject.getJSONObject("baike");
 
             Gson gson = new Gson();
-            RecgResultBean result = gson.fromJson(sb.toString(), RecgResultBean.class);
+            RecgResponseBean result = gson.fromJson(sb.toString(), RecgResponseBean.class);
             Map<String, Object> face = (Map<String, Object>) result.getResult().get("face");
             String baike = (String) face.get("baike");
             Map<String, Object> baikeMap = gson.fromJson(baike, new TypeToken<Map<String, Object>>() {

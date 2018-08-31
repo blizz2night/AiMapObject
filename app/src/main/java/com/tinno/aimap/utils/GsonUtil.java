@@ -1,17 +1,13 @@
 package com.tinno.aimap.utils;
 
-import android.annotation.SuppressLint;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.tinno.aimap.model.AnimalBean;
-import com.tinno.aimap.model.BrandBean;
 import com.tinno.aimap.model.CarBean;
 import com.tinno.aimap.model.ComplexJsonObjBean;
 import com.tinno.aimap.model.DishesBean;
@@ -34,15 +30,17 @@ import java.util.List;
 public class GsonUtil {
     private static class GsonHolder{
         private static final Gson INSTANCE = new GsonBuilder()
-                .registerTypeAdapter(
-                        new TypeToken<List<BrandBean>>(){}.getType()
-                        , new BrandDeserializer()
-                )
-                .registerTypeAdapter(new TypeToken<List<PlantBean>>(){}.getType(),new MyComplexJsonDeserializer<PlantBean>())
-                .registerTypeAdapter(new TypeToken<List<DishesBean>>(){}.getType(),new MyComplexJsonDeserializer<DishesBean>())
-                .registerTypeAdapter(new TypeToken<List<AnimalBean>>(){}.getType(),new MyComplexJsonDeserializer<AnimalBean>())
-                .registerTypeAdapter(new TypeToken<List<CarBean>>(){}.getType(),new MyComplexJsonDeserializer<CarBean>())
-                .registerTypeAdapter(FaceBean.class ,new FaceBeanDeserializer())
+//                .registerTypeAdapter(new TypeToken<List<BrandBean>>(){}.getType(), new BrandDeserializer())
+                .registerTypeAdapter(new TypeToken<List<PlantBean>>(){}.getType(),
+                        new MyComplexJsonDeserializer<PlantBean>())
+                .registerTypeAdapter(new TypeToken<List<DishesBean>>(){}.getType(),
+                        new MyComplexJsonDeserializer<DishesBean>())
+                .registerTypeAdapter(new TypeToken<List<AnimalBean>>(){}.getType(),
+                        new MyComplexJsonDeserializer<AnimalBean>())
+                .registerTypeAdapter(new TypeToken<List<CarBean>>(){}.getType(),
+                        new MyComplexJsonDeserializer<CarBean>())
+                .registerTypeAdapter(FaceBean.class,
+                        new FaceBeanDeserializer())
                 .create();
     }
 
@@ -50,48 +48,39 @@ public class GsonUtil {
         return GsonHolder.INSTANCE;
     }
 
-    @SuppressLint("NewApi")
     public static String getBase64String(String path) throws IOException {
         byte[] bytes = FileUtils.readFileToByteArray(new File(path));
         return Base64.getEncoder().encodeToString(bytes);
     }
 
 
-    public static class BrandDeserializer implements JsonDeserializer<List<BrandBean>> {
-        @SuppressLint("NewApi")
-        @Override
-        public List<BrandBean> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            if (json == null || json.isJsonNull()) {
-                return null;
-            }
-
-            List<BrandBean> list = new ArrayList<>();
-            if (json.isJsonArray()) {
-                JsonArray jsonArray = json.getAsJsonArray();
-                for (JsonElement jsonElement : jsonArray) {
-                    BrandBean brandBean = GsonUtil.getInstance().fromJson(jsonElement, BrandBean.class);
-                    if (brandBean != null) {
-                        list.add(brandBean);
-                    }
-                }
-            } else {
-                BrandBean brandBean = GsonUtil.getInstance().fromJson(json, BrandBean.class);
-                if (brandBean != null) {
-                    list.add(brandBean);
-                }
-            }
-
-            return list.size() > 0 ? list : null;
-        }
-    }
+//    public static class BrandDeserializer implements JsonDeserializer<List<BrandBean>> {
+//        @SuppressLint("NewApi")
+//        @Override
+//        public List<BrandBean> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+//            List<BrandBean> list = new ArrayList<>();
+//            if (json.isJsonArray()) {
+//                JsonArray jsonArray = json.getAsJsonArray();
+//                for (JsonElement jsonElement : jsonArray) {
+//                    BrandBean brandBean = GsonUtil.getInstance().fromJson(jsonElement, BrandBean.class);
+//                    if (brandBean != null) {
+//                        list.add(brandBean);
+//                    }
+//                }
+//            } else {
+//                BrandBean brandBean = GsonUtil.getInstance().fromJson(json, BrandBean.class);
+//                if (brandBean != null) {
+//                    list.add(brandBean);
+//                }
+//            }
+//
+//            return list.size() > 0 ? list : null;
+//        }
+//    }
 
     public static class MyComplexJsonDeserializer<T extends ComplexJsonObjBean> implements JsonDeserializer<List<T>> {
-        @SuppressLint("NewApi")
         @Override
         public List<T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            if (json == null || json.isJsonNull()) {
-                return null;
-            }
             List<T> list = new ArrayList<>();
             ComplexJsonObjBean.Outter outter = GsonUtil.getInstance().fromJson(json, ComplexJsonObjBean.Outter.class);
             List<ComplexJsonObjBean.Outter.BaikeBean> baikes = outter.getBaike();
@@ -103,6 +92,7 @@ public class GsonUtil {
                         if (actualTypeArguments != null && actualTypeArguments.length > 0) {
                             Class<T> clazz = (Class<T>) actualTypeArguments[0];
                             try {
+                                // Get constructor of (new *Bean(String name))
                                 Constructor<T> constructor = clazz.getConstructor(String.class);
                                 T t = constructor.newInstance(name);
                                 String valueStr = baike.getValue();
@@ -119,7 +109,6 @@ public class GsonUtil {
                             }
                         }
                     }
-
                 }
             }
             return list.size() > 0 ? list : null;
@@ -127,12 +116,8 @@ public class GsonUtil {
     }
 
     public static class FaceBeanDeserializer implements JsonDeserializer<FaceBean> {
-
         @Override
         public FaceBean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            if (json == null || json.isJsonNull()) {
-                return null;
-            }
             FaceBean faceBean = null;
             FaceBean.Outter outter = GsonUtil.getInstance().fromJson(json, FaceBean.Outter.class);
             if (outter == null) {
@@ -152,7 +137,7 @@ public class GsonUtil {
                 faceBean.setThumbUrl(inner.getTnurl());
                 faceBean.setLocation(new LocationBean(inner.getFace_x(),
                         inner.getFace_y(), inner.getFace_w(), inner.getFace_h()));
-
+                faceBean.setScore(inner.getScore());
                 baike = inner.getBaike();
                 if (baike != null && !"".equals(baike)) {
                     FaceBean.FurtherInner furtherInner = GsonUtil.getInstance().fromJson(baike, FaceBean.FurtherInner.class);

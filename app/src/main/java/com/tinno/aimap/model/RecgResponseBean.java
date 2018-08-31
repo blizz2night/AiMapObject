@@ -4,14 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class RecgResultBean {
+public class RecgResponseBean extends ResponseBean {
     private Result result;
-    @SerializedName("error_code")
-    private int errorCode;
-    @SerializedName("error_msg")
-    private String errorMsg;
-    private String support;
-    private String logid;
 
     public Result getResult() {
         return result;
@@ -19,38 +13,6 @@ public class RecgResultBean {
 
     public void setResult(Result result) {
         this.result = result;
-    }
-
-    public int getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(int errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
-    }
-
-    public String getSupport() {
-        return support;
-    }
-
-    public void setSupport(String support) {
-        this.support = support;
-    }
-
-    public String getLogid() {
-        return logid;
-    }
-
-    public void setLogid(String logid) {
-        this.logid = logid;
     }
 
     public static class Result {
@@ -61,9 +23,9 @@ public class RecgResultBean {
         @SerializedName(value = "movie", alternate = "moive")
         private List<MovieBean> movie;
         private List<MusicBean> music;
-        private List<ProductBean> product;
+//        private List<ProductBean> product;
 
-        private List<BrandBean> brandLogo;
+        private BrandBean brandLogo;
         private FaceBean face;
         private List<CarBean> car;
         private List<DishesBean> dishes;
@@ -110,19 +72,19 @@ public class RecgResultBean {
             this.music = music;
         }
 
-        public List<ProductBean> getProduct() {
-            return product;
-        }
+//        public List<ProductBean> getProduct() {
+//            return product;
+//        }
+//
+//        public void setProduct(List<ProductBean> product) {
+//            this.product = product;
+//        }
 
-        public void setProduct(List<ProductBean> product) {
-            this.product = product;
-        }
-
-        public List<BrandBean> getBrandLogo() {
+        public BrandBean getBrandLogo() {
             return brandLogo;
         }
 
-        public void setBrandLogo(List<BrandBean> brandLogo) {
+        public void setBrandLogo(BrandBean brandLogo) {
             this.brandLogo = brandLogo;
         }
 
@@ -174,7 +136,7 @@ public class RecgResultBean {
                     ", book=" + book +'\n'+
                     ", movie=" + movie +'\n'+
                     ", music=" + music +'\n'+
-                    ", product=" + product +'\n'+
+//                    ", product=" + product +'\n'+
                     ", brandLogo=" + brandLogo +'\n'+
                     ", face=" + face +'\n'+
                     ", car=" + car +'\n'+

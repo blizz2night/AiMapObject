@@ -24,9 +24,9 @@ public class BookBean {
     private String name;
     @SerializedName(value = "intro")
     private String description;
-    @SerializedName(value = "linkUrl")
+    @SerializedName(value = "linkurl")
     private String linkUrl;
-    @SerializedName(value = "thumbUrl")
+    @SerializedName(value = "thumburl")
     private String thumbUrl;
 
     public String getName() {

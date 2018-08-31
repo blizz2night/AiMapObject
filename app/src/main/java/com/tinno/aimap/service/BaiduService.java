@@ -1,8 +1,8 @@
 package com.tinno.aimap.service;
 
-import android.annotation.SuppressLint;
+import android.support.annotation.Nullable;
 
-import com.tinno.aimap.model.RecgResultBean;
+import com.tinno.aimap.model.RecgResponseBean;
 import com.tinno.aimap.model.TokenBean;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ import okhttp3.ResponseBody;
 
 import static com.tinno.aimap.utils.GsonUtil.getInstance;
 
-public class AIService {
+public class BaiduService {
     String BASE_URL = "https://openapi.baidu.com/";
 
 /**
@@ -89,43 +89,41 @@ public class AIService {
         return tokenBean.getAccessToken();
     }
 
-    public static RecgResultBean parseRecgResult(String jsonResult) {
-        return getInstance().fromJson(jsonResult, RecgResultBean.class);
+    public static RecgResponseBean parseRecgResult(String jsonResult) {
+        return getInstance().fromJson(jsonResult, RecgResponseBean.class);
     }
 
-    @SuppressLint("NewApi")
     public static String objectRecognize(String token, String base64String) throws IOException {
         Request request = buildRecgRequest(token, base64String);
-        Response response = getHttpClient().newCall(request).execute();
-        ResponseBody body = response.body();
-        if (body != null) {
-            return body.string();
-        }
-        return null;
+        return getResponseBody(request);
     }
 
 
-    @SuppressLint("NewApi")
     public static String objectRecognize(String token, byte[] jpgByte) throws IOException {
         String img64 = Base64.getEncoder().encodeToString(jpgByte);
         return objectRecognize(token, img64);
     }
 
-    @SuppressLint("NewApi")
-    public static String characterRcognize(String token, String base64String) throws IOException{
+    public static String characterRecognize(String token, String base64String) throws IOException{
         Request request = buildOcrRequest(token, base64String);
-        Response response = getHttpClient().newCall(request).execute();
-        ResponseBody body = response.body();
-        if (body != null) {
-            return body.string();
+        return getResponseBody(request);
+    }
+
+    @Nullable
+    private static String getResponseBody(Request request) throws IOException {
+        try(Response response = getHttpClient().newCall(request).execute()) {
+            //TODO handle error code
+            ResponseBody body = response.body();
+            if (body != null) {
+                return body.string();
+            }
         }
         return null;
     }
 
-    @SuppressLint("NewApi")
-    public static String characterRcognize(String token, byte[] jpgByte) throws IOException{
+    public static String characterRecognize(String token, byte[] jpgByte) throws IOException{
         String img64 = Base64.getEncoder().encodeToString(jpgByte);
-        return characterRcognize(token, img64);
+        return characterRecognize(token, img64);
     }
 
     private static Request buildTokenRequest() {
@@ -134,7 +132,7 @@ public class AIService {
                 .add(RequestKey.CLIENT_SECRET, CLIENT_SECRET)
                 .add(RequestKey.GRANT_TYPE, GRANT_TYPE)
                 .build();
-        return new Request.Builder().url(AIService.TOKEN_URL)
+        return new Request.Builder().url(BaiduService.TOKEN_URL)
                 .post(formBody)
                 .build();
     }
@@ -146,15 +144,16 @@ public class AIService {
                 .add(RequestKey.ECOLOGY_UID, "1234567890")
                 .add(RequestKey.ECO, ECO)
                 .build();
-        return new Request.Builder().post(requestBody).url(AIService.RECG_URL).build();
+        return new Request.Builder().post(requestBody).url(BaiduService.RECG_URL).build();
     }
 
     private static Request buildOcrRequest(String token, String image64) {
         RequestBody requestBody = new FormBody.Builder()
                 .add(RequestKey.ACCESS_TOKEN, token)
                 .add(RequestKey.IMAGE, image64)
+//                .add(RequestKey.POS, "1")
                 .build();
-        return new Request.Builder().post(requestBody).url(AIService.OCR_URL).build();
+        return new Request.Builder().post(requestBody).url(BaiduService.OCR_URL).build();
     }
 
 }

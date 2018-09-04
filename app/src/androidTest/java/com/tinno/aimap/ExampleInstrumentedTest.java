@@ -6,18 +6,12 @@ import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.tinno.aimap.model.FaceBean;
-import com.tinno.aimap.model.RecgResponseBean;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -60,7 +54,7 @@ public class ExampleInstrumentedTest {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                Log.i(TAG, "onFailure: ",e);
             }
 
             @Override
@@ -77,7 +71,7 @@ public class ExampleInstrumentedTest {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                Log.i(TAG, "onFailure: ",e);
             }
 
             @Override
@@ -112,57 +106,54 @@ public class ExampleInstrumentedTest {
 
     @Test
     public void test_gson_face(){
-        StringBuilder sb = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.facejson)))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-                sb.append(line).append('\n');
-            }
-            String json = sb.toString();
-//            json = json.replaceAll("\\\\", "");
-            Log.w(TAG, "replaceAll: "+ json);
-//            JSONObject jsonObject = new JSONObject(json);
-//            String words = jsonObject.getString("words");
-//            System.out.println(words);
-//            JSONObject baike = jsonObject.getJSONObject("baike");
-
-            Gson gson = new Gson();
-            FaceBean faceBean = gson.fromJson(sb.toString(), FaceBean.class);
-            Log.i(TAG, "test_gson: ");
-        } catch (IOException e) {
-            Log.e(TAG, "test_gson: ", e);
-        }
+//        StringBuilder sb = new StringBuilder();
+//        try (BufferedReader reader = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.facejson)))) {
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                System.out.println(line);
+//                sb.append(line).append('\n');
+//            }
+//            String json = sb.toString();
+////            json = json.replaceAll("\\\\", "");
+//            Log.w(TAG, "replaceAll: "+ json);
+////            JSONObject jsonObject = new JSONObject(json);
+////            String words = jsonObject.getString("words");
+////            System.out.println(words);
+////            JSONObject baike = jsonObject.getJSONObject("baike");
+//
+//            Gson gson = new Gson();
+//            FaceBean faceBean = gson.fromJson(sb.toString(), FaceBean.class);
+//            Log.i(TAG, "test_gson: ");
+//        } catch (IOException e) {
+//            Log.e(TAG, "test_gson: ", e);
+//        }
     }
 
     @Test
     public void test_gson_test(){
-        StringBuilder sb = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.testjson)))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-                sb.append(line).append('\n');
-            }
-            String json = sb.toString();
-//            json = json.replaceAll("\\\\", "");
-            Log.w(TAG, "replaceAll: "+ json);
-//            JSONObject jsonObject = new JSONObject(json);
-//            String words = jsonObject.getString("words");
-//            System.out.println(words);
-//            JSONObject baike = jsonObject.getJSONObject("baike");
-
-            Gson gson = new Gson();
-            RecgResponseBean result = gson.fromJson(sb.toString(), RecgResponseBean.class);
-            Map<String, Object> face = (Map<String, Object>) result.getResult().get("face");
-            String baike = (String) face.get("baike");
-            Map<String, Object> baikeMap = gson.fromJson(baike, new TypeToken<Map<String, Object>>() {
-            }.getType() );
-//            String faceString = (String) result.getResult().get("face");
-//            FaceBean face = gson.fromJson(sb.toString(), FaceBean.class);
-            Log.i(TAG, "test_gson: ");
-        } catch (IOException e) {
-            Log.e(TAG, "test_gson: ", e);
-        }
+//        StringBuilder sb = new StringBuilder();
+//        try (BufferedReader reader = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.testjson)))) {
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                System.out.println(line);
+//                sb.append(line).append('\n');
+//            }
+//            String json = sb.toString();
+////            json = json.replaceAll("\\\\", "");
+//            Log.w(TAG, "replaceAll: "+ json);
+////            JSONObject jsonObject = new JSONObject(json);
+////            String words = jsonObject.getString("words");
+////            System.out.println(words);
+////            JSONObject baike = jsonObject.getJSONObject("baike");
+//
+//            Gson gson = new Gson();
+//            RecgResponseBean result = gson.fromJson(sb.toString(), RecgResponseBean.class);
+//
+////            String faceString = (String) result.getResult().get("face");
+////            FaceBean face = gson.fromJson(sb.toString(), FaceBean.class);
+//            Log.i(TAG, "test_gson: ");
+//        } catch (IOException e) {
+//            Log.e(TAG, "test_gson: ", e);
+//        }
     }
 }

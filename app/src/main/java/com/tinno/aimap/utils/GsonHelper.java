@@ -13,7 +13,11 @@ import com.tinno.aimap.model.ComplexJsonObjBean;
 import com.tinno.aimap.model.DishesBean;
 import com.tinno.aimap.model.FaceBean;
 import com.tinno.aimap.model.LocationBean;
+import com.tinno.aimap.model.OcrResponseBean;
 import com.tinno.aimap.model.PlantBean;
+import com.tinno.aimap.model.RecgResponseBean;
+import com.tinno.aimap.model.ResponseBean;
+import com.tinno.aimap.model.TokenBean;
 
 import org.apache.commons.io.FileUtils;
 
@@ -27,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class GsonUtil {
+public class GsonHelper {
     private static class GsonHolder{
         private static final Gson INSTANCE = new GsonBuilder()
 //                .registerTypeAdapter(new TypeToken<List<BrandBean>>(){}.getType(), new BrandDeserializer())
@@ -53,6 +57,21 @@ public class GsonUtil {
         return Base64.getEncoder().encodeToString(bytes);
     }
 
+    public static TokenBean getTokenBean(String json) throws IOException {
+        return getInstance().fromJson(json, TokenBean.class);
+    }
+
+    public static RecgResponseBean getRecgResponseBean(String jsonResult) {
+        return getInstance().fromJson(jsonResult, RecgResponseBean.class);
+    }
+
+    public static OcrResponseBean getOcrResponseBean(String jsonResult) {
+        return getInstance().fromJson(jsonResult, OcrResponseBean.class);
+    }
+
+    public static ResponseBean getResponseBean(String jsonResult) {
+        return getInstance().fromJson(jsonResult, ResponseBean.class);
+    }
 
 //    public static class BrandDeserializer implements JsonDeserializer<List<BrandBean>> {
 //        @SuppressLint("NewApi")
@@ -82,7 +101,7 @@ public class GsonUtil {
         @Override
         public List<T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             List<T> list = new ArrayList<>();
-            ComplexJsonObjBean.Outter outter = GsonUtil.getInstance().fromJson(json, ComplexJsonObjBean.Outter.class);
+            ComplexJsonObjBean.Outter outter = GsonHelper.getInstance().fromJson(json, ComplexJsonObjBean.Outter.class);
             List<ComplexJsonObjBean.Outter.BaikeBean> baikes = outter.getBaike();
             for (ComplexJsonObjBean.Outter.BaikeBean baike : baikes) {
                 String name = baike.getKeyword();
@@ -96,7 +115,7 @@ public class GsonUtil {
                                 Constructor<T> constructor = clazz.getConstructor(String.class);
                                 T t = constructor.newInstance(name);
                                 String valueStr = baike.getValue();
-                                ComplexJsonObjBean.Inner value = GsonUtil.getInstance().fromJson(valueStr, ComplexJsonObjBean.Inner.class);
+                                ComplexJsonObjBean.Inner value = GsonHelper.getInstance().fromJson(valueStr, ComplexJsonObjBean.Inner.class);
                                 t.setDescription(value.getDescription());
                                 t.setLinkUrl(value.getLinkUrl());
                                 t.setThumbUrl(value.getPic_1());
@@ -119,7 +138,7 @@ public class GsonUtil {
         @Override
         public FaceBean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             FaceBean faceBean = null;
-            FaceBean.Outter outter = GsonUtil.getInstance().fromJson(json, FaceBean.Outter.class);
+            FaceBean.Outter outter = GsonHelper.getInstance().fromJson(json, FaceBean.Outter.class);
             if (outter == null) {
                 return null;
             }
@@ -127,7 +146,7 @@ public class GsonUtil {
             if (baike == null) {
                 return null;
             }
-            FaceBean.Inner inner = GsonUtil.getInstance().fromJson(baike, FaceBean.Inner.class);
+            FaceBean.Inner inner = GsonHelper.getInstance().fromJson(baike, FaceBean.Inner.class);
             if (inner == null) {
                 return null;
             }
@@ -140,7 +159,7 @@ public class GsonUtil {
                 faceBean.setScore(inner.getScore());
                 baike = inner.getBaike();
                 if (baike != null && !"".equals(baike)) {
-                    FaceBean.FurtherInner furtherInner = GsonUtil.getInstance().fromJson(baike, FaceBean.FurtherInner.class);
+                    FaceBean.FurtherInner furtherInner = GsonHelper.getInstance().fromJson(baike, FaceBean.FurtherInner.class);
                     faceBean.setLinkUrl(furtherInner.getLinkUrl());
                     faceBean.setDescription(furtherInner.getDescription());
                 }

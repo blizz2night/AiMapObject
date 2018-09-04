@@ -24,6 +24,7 @@ public @interface Catalog {
     public static final String SCAN = "scan";
 
     public static final String OCR = "ocr";
+    public static final String RECG = "recg";
     public static final String NEGTIVE = "negative";
     public static final String POSITIVE = "positive";
 }
